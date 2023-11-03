@@ -1,29 +1,54 @@
-registros_consumo = {}
+mesas_consumo = {1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}}
 
-def criar_registro(nome_cliente, valor_consumido):
-    registros_consumo[nome_cliente] = valor_consumido
-    print(f"Registro de {nome_cliente} criado com sucesso!")
-
-def ler_registros():
-    if registros_consumo:
-        for cliente, valor in registros_consumo.items():
-            print(f"{cliente}: R${valor:.2f}")
+def criar_registro(numero_mesa, nome_cliente, valor_consumido):
+    if numero_mesa in mesas_consumo:
+        if nome_cliente in mesas_consumo[numero_mesa]:
+            mesas_consumo[numero_mesa][nome_cliente] += valor_consumido
+        else:
+            mesas_consumo[numero_mesa][nome_cliente] = valor_consumido
+        print(f"Registro de {nome_cliente} na mesa {numero_mesa} criado com sucesso!")
     else:
-        print("Não há registros de consumo disponíveis.")
+        print(f"Mesa {numero_mesa} não encontrada.")
 
-def atualizar_registro(nome_cliente, novo_valor):
-    if nome_cliente in registros_consumo:
-        registros_consumo[nome_cliente] = novo_valor
-        print(f"Registro de {nome_cliente} atualizado com sucesso!")
+def calcular_total_consumo(numero_mesa):
+    if numero_mesa in mesas_consumo:
+        total = sum(mesas_consumo[numero_mesa].values())
+        return total
     else:
-        print(f"Cliente {nome_cliente} não encontrado.")
+        return 0.0
 
-def excluir_registro(nome_cliente):
-    if nome_cliente in registros_consumo:
-        del registros_consumo[nome_cliente]
-        print(f"Registro de {nome_cliente} excluído com sucesso!")
+def ler_registros(numero_mesa):
+    if numero_mesa in mesas_consumo:
+        if mesas_consumo[numero_mesa]:
+            print(f"Consumo na mesa {numero_mesa}:")
+            for cliente, valor in mesas_consumo[numero_mesa].items():
+                print(f"{cliente}: R${valor:.2f}")
+            total_consumo = calcular_total_consumo(numero_mesa)
+            print(f"Total de consumo na mesa {numero_mesa}: R${total_consumo:.2f}")
+        else:
+            print(f"Não há registros de consumo disponíveis para a mesa {numero_mesa}.")
     else:
-        print(f"Cliente {nome_cliente} não encontrado.")
+        print(f"Mesa {numero_mesa} não encontrada.")
+
+def atualizar_registro(numero_mesa, nome_cliente, novo_valor):
+    if numero_mesa in mesas_consumo:
+        if nome_cliente in mesas_consumo[numero_mesa]:
+            mesas_consumo[numero_mesa][nome_cliente] = novo_valor
+            print(f"Registro de {nome_cliente} na mesa {numero_mesa} atualizado com sucesso!")
+        else:
+            print(f"Cliente {nome_cliente} não encontrado na mesa {numero_mesa}.")
+    else:
+        print(f"Mesa {numero_mesa} não encontrada.")
+
+def excluir_registro(numero_mesa, nome_cliente):
+    if numero_mesa in mesas_consumo:
+        if nome_cliente in mesas_consumo[numero_mesa]:
+            del mesas_consumo[numero_mesa][nome_cliente]
+            print(f"Registro de {nome_cliente} na mesa {numero_mesa} excluído com sucesso!")
+        else:
+            print(f"Cliente {nome_cliente} não encontrado na mesa {numero_mesa}.")
+    else:
+        print(f"Mesa {numero_mesa} não encontrada.")
 
 def main():
     while True:
@@ -37,18 +62,34 @@ def main():
         escolha = input("Escolha uma opção (1/2/3/4/5): ")
 
         if escolha == "1":
-            nome_cliente = input("Nome do cliente: ")
-            valor_consumido = float(input("Valor consumido: "))
-            criar_registro(nome_cliente, valor_consumido)
+            numero_mesa = int(input("Número da mesa (1-6): "))
+            if numero_mesa >= 1 and numero_mesa <= 6:
+                nome_cliente = input("Nome do cliente: ")
+                valor_consumido = float(input("Valor consumido: "))
+                criar_registro(numero_mesa, nome_cliente, valor_consumido)
+            else:
+                print("Mesa inválida. Escolha uma mesa de 1 a 6.")
         elif escolha == "2":
-            ler_registros()
+            numero_mesa = int(input("Número da mesa (1-6): "))
+            if numero_mesa >= 1 and numero_mesa <= 6:
+                ler_registros(numero_mesa)
+            else:
+                print("Mesa inválida. Escolha uma mesa de 1 a 6.")
         elif escolha == "3":
-            nome_cliente = input("Nome do cliente a ser atualizado: ")
-            novo_valor = float(input("Novo valor consumido: "))
-            atualizar_registro(nome_cliente, novo_valor)
+            numero_mesa = int(input("Número da mesa (1-6): "))
+            if numero_mesa >= 1 and numero_mesa <= 6:
+                nome_cliente = input("Nome do cliente a ser atualizado: ")
+                novo_valor = float(input("Novo valor consumido: "))
+                atualizar_registro(numero_mesa, nome_cliente, novo_valor)
+            else:
+                print("Mesa inválida. Escolha uma mesa de 1 a 6.")
         elif escolha == "4":
-            nome_cliente = input("Nome do cliente a ser excluído: ")
-            excluir_registro(nome_cliente)
+            numero_mesa = int(input("Número da mesa (1-6): "))
+            if numero_mesa >= 1 and numero_mesa <= 6:
+                nome_cliente = input("Nome do cliente a ser excluído: ")
+                excluir_registro(numero_mesa, nome_cliente)
+            else:
+                print("Mesa inválida. Escolha uma mesa de 1 a 6.")
         elif escolha == "5":
             print("Saindo do sistema.")
             break
