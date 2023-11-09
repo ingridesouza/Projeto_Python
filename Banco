@@ -1,0 +1,12 @@
+import sqlite3
+
+conn = sqlite3.connect('Restaurante_BD.sqlite')
+
+#cursor criado
+cursor = conn.cursor()
+
+cursor.execute('''CREATE TABLE IF NOT EXISTS pratos (
+                    id INTEGER PRIMARY KEY,
+                    titulo TEXT,
+                    valor DOUBLE
+                )''')
