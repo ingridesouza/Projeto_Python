@@ -33,12 +33,13 @@ def ler_registros(numero_mesa):
 def atualizar_registro(numero_mesa, nome_cliente, novo_valor):
     if numero_mesa in mesas_consumo:
         if nome_cliente in mesas_consumo[numero_mesa]:
-            mesas_consumo[numero_mesa][nome_cliente] = novo_valor
+            mesas_consumo[numero_mesa][nome_cliente] += novo_valor
             print(f"Registro de {nome_cliente} na mesa {numero_mesa} atualizado com sucesso!")
         else:
             print(f"Cliente {nome_cliente} não encontrado na mesa {numero_mesa}.")
     else:
         print(f"Mesa {numero_mesa} não encontrada.")
+
 
 def excluir_registro(numero_mesa, nome_cliente):
     if numero_mesa in mesas_consumo:
@@ -65,10 +66,12 @@ def main():
             numero_mesa = int(input("Número da mesa (1-6): "))
             if numero_mesa >= 1 and numero_mesa <= 6:
                 nome_cliente = input("Nome do cliente: ")
-                valor_consumido = float(input("Valor consumido: "))
+                valor_consumido = float(input("Valor consumido: ").replace(',', '.'))
                 criar_registro(numero_mesa, nome_cliente, valor_consumido)
             else:
                 print("Mesa inválida. Escolha uma mesa de 1 a 6.")
+        
+
         elif escolha == "2":
             numero_mesa = int(input("Número da mesa (1-6): "))
             if numero_mesa >= 1 and numero_mesa <= 6:
