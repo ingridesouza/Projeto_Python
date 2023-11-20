@@ -79,26 +79,24 @@ def sair():
 
 root = tk.Tk()
 root.title("Sistema de Controle de Consumo de Restaurante")
-root['background']='#FFEFDB'
 
 
-mesa_label = tk.Label(root, text="Número da mesa (1-6):", background='#FFEFDB')
+mesa_label = tk.Label(root, text="Número da mesa (1-6):")
 mesa_label.pack()
 
 mesa_entry = tk.Entry(root)
 mesa_entry_entry = tk.Entry(width=18)
 mesa_entry.pack()
 
-cliente_label = tk.Label(root, text="Nome do cliente:", background='#FFEFDB')
+cliente_label = tk.Label(root, text="Nome do cliente:")
 cliente_label.pack()
 
 
 cliente_entry = tk.Entry(root)
 cliente_entry = tk.Entry(width=18)
-cliente_entry.grid(row=1, column=0)
 cliente_entry.pack()
 
-valor_label = tk.Label(root, text="Valor consumido:", background='#FFEFDB')
+valor_label = tk.Label(root, text="Valor consumido:")
 valor_label.pack()
 
 valor_entry = tk.Entry(root)
@@ -106,7 +104,6 @@ valor_label = tk.Entry(width=18)
 valor_entry.pack()
 
 criar_button = tk.Button(root, width = 17, height = 2, text="Criar Comanda", command=criar_registro, background="white")
-# criar_button.grid
 criar_button.pack()
 
 atualizar_button = tk.Button(root, width = 17, height = 2, text="Adicionar Registro", command=atualizar_registro, background="white")
