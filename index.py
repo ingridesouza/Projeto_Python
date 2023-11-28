@@ -1,17 +1,40 @@
 import tkinter as tk
+from tkinter import ttk
 
-from Banco import RoomDB
-
-database = RoomDB()
-
+# Dicionário com a quantidade de mesa
 mesas_consumo = {1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}}
 
+# Dicionário com os preços dos pratos
+precos_pratos = {
+    "Massa Carbonara": 20.0,
+    "Frango Grelhado": 15.0,
+    "Pizza Margherita": 18.0,
+}
+
+# Dicionário com os preços das bebidas
+precos_bebidas = {
+    "Água Mineral": 3.0,
+    "Refrigerante": 5.0,
+    "Suco Natural": 6.0,
+}
+
 def criar_registro():
+    #função para criar o registro das pessoas nas mesas
+    #variavel com o numero da mesa
     numero_mesa = int(mesa_entry.get())
+    #variavel com  o nome do cliente
     nome_cliente = cliente_entry.get()
-    valor_consumido = float(valor_entry.get())
+    #variavel do prato principal
     prato_principal = prato_principal_var.get()
+    #variavel da bebida
     bebida = bebida_var.get()
+    #variavel com preco do prato
+    preco_prato = precos_pratos.get(prato_principal, 0.0)
+    #variavel com o preco da bebida
+    preco_bebida = precos_bebidas.get(bebida, 0.0)
+    #variavel do valor consumido
+    valor_consumido = preco_prato + preco_bebida
+    
     if numero_mesa >= 1 and numero_mesa <= 6:
         if numero_mesa in mesas_consumo:
             if nome_cliente in mesas_consumo[numero_mesa]:
@@ -25,6 +48,8 @@ def criar_registro():
         result_label.config(text="Mesa inválida. Escolha uma mesa de 1 a 6.")
 
 def ler_registros():
+    #essa função retorna a conta da mesa, tanto de cada pessoa, quanto o total de cada mesa
+    #variavel com o numero da mesa
     numero_mesa = int(mesa_entry.get())
     if numero_mesa >= 1 and numero_mesa <= 6:
         if numero_mesa in mesas_consumo:
@@ -33,9 +58,6 @@ def ler_registros():
                 for cliente, valor in mesas_consumo[numero_mesa].items():
                     result_label.config(text=result_label.cget("text") + f"{cliente}: R${valor:.2f}\n")
                 total_consumo = calcular_total_consumo(numero_mesa)
-
-                #poe o total no banco
-                database.inserir_total(total_consumo)
                 result_label.config(text=result_label.cget("text") + f"Total de consumo na mesa {numero_mesa}: R${total_consumo:.2f}")
             else:
                 result_label.config(text=f"Não há registros de consumo disponíveis para a mesa {numero_mesa}.")
@@ -45,41 +67,24 @@ def ler_registros():
         result_label.config(text="Mesa inválida. Escolha uma mesa de 1 a 6.")
 
 def calcular_total_consumo(numero_mesa):
+    #função que calcula o total do consumo
     if numero_mesa in mesas_consumo:
         total = sum(mesas_consumo[numero_mesa].values())
         return total
     else:
         return 0.0
-
-def atualizar_registro():
-    numero_mesa = int(mesa_entry.get())
-    nome_cliente = cliente_entry.get()
-    novo_valor = float(valor_entry.get())
-    if numero_mesa >= 1 and numero_mesa <= 6:
-        if numero_mesa in mesas_consumo:
-            if nome_cliente in mesas_consumo[numero_mesa]:
-                mesas_consumo[numero_mesa][nome_cliente] = novo_valor
-
-                #insere o cliente numero da mesa no banco
-                database.inserir_cliente(nome_cliente,numero_mesa)
-
-                result_label.config(text=f"Registro de {nome_cliente} na mesa {numero_mesa} atualizado com sucesso!")
-            
-            else:
-                result_label.config(text=f"Cliente {nome_cliente} não encontrado na mesa {numero_mesa}.")
-        else:
-            result_label.config(text=f"Mesa {numero_mesa} não encontrada.")
-    else:
-        result_label.config(text="Mesa inválida. Escolha uma mesa de 1 a 6.")
+    
 
 def excluir_registro():
+    #função que exclui o registro do cliente na mesa e tbm o registro da mesa no sistema
+    #variavel com o numero da mesa
     numero_mesa = int(mesa_entry.get())
+    #variavel com  o nome do cliente
     nome_cliente = cliente_entry.get()
     if numero_mesa >= 1 and numero_mesa <= 6:
         if numero_mesa in mesas_consumo:
             if nome_cliente in mesas_consumo[numero_mesa]:
                 del mesas_consumo[numero_mesa][nome_cliente]
-
                 result_label.config(text=f"Registro de {nome_cliente} na mesa {numero_mesa} excluído com sucesso!")
             else:
                 result_label.config(text=f"Cliente {nome_cliente} não encontrado na mesa {numero_mesa}.")
@@ -89,16 +94,18 @@ def excluir_registro():
         result_label.config(text="Mesa inválida. Escolha uma mesa de 1 a 6.")
 
 def adicionar_valor():
+    #função de adicionar valor, para fazer um "novo pedido", ele vai somar com o valor q ja tem no registro
+    #variavel com o numero da mesa
     numero_mesa = int(mesa_entry.get())
+      #variavel com  o nome do cliente
     nome_cliente = cliente_entry.get()
+    #variavel do valor adicional
     valor_adicional = float(valor_entry.get())
+    
     if numero_mesa >= 1 and numero_mesa <= 6:
         if numero_mesa in mesas_consumo:
             if nome_cliente in mesas_consumo[numero_mesa]:
                 mesas_consumo[numero_mesa][nome_cliente] += valor_adicional
-
-                #insere o valor do prato ao cliente
-                database.inserir_valor(nome_cliente,valor_adicional)
                 result_label.config(text=f"Valor adicionado para {nome_cliente} na mesa {numero_mesa} com sucesso!")
             else:
                 result_label.config(text=f"Cliente {nome_cliente} não encontrado na mesa {numero_mesa}.")
@@ -108,67 +115,74 @@ def adicionar_valor():
         result_label.config(text="Mesa inválida. Escolha uma mesa de 1 a 6.")
 
 def sair():
-    root.destroy()
+    master.destroy()
+    #para fechar a janela
 
-root = tk.Tk()
-root.title("Sistema de Controle de Consumo de Restaurante")
+master = tk.Tk()
+master.title("Sistema de Controle de Consumo de Restaurante")
+master.geometry("400x480")
 
+titulo_label = tk.Label(master, text="Sistema de Controle de Consumo", font=("Helvetica", 16, "bold"), background='#E0E0E0')
+titulo_label.grid(row=0, column=0, columnspan=2, pady=10)
 
-mesa_label = tk.Label(root, text="Número da mesa (1-6):")
-mesa_label.pack()
+mesa_label = tk.Label(master, text="Número da mesa (1-6):")
+mesa_label.grid(row=1, column=0)
 
-mesa_entry = tk.Entry(root)
-mesa_entry_entry = tk.Entry(width=18)
-mesa_entry.pack()
+mesa_entry = tk.Entry(master)
+mesa_entry.grid(row=1, column=1)
 
-cliente_label = tk.Label(root, text="Nome do cliente:")
-cliente_label.pack()
+cliente_label = tk.Label(master, text="Nome do cliente:")
+cliente_label.grid(row=2, column=0)
 
-cliente_entry = tk.Entry(root)
-cliente_entry = tk.Entry(width=18)
-cliente_entry.pack()
-
-valor_label = tk.Label(root, text="Valor consumido:")
-valor_label.pack()
-
-valor_entry = tk.Entry(root)
-valor_label = tk.Entry(width=18)
-valor_entry.pack()
+cliente_entry = tk.Entry(master)
+cliente_entry.grid(row=2, column=1)
 
 pratos_principais_options = ["Massa Carbonara", "Frango Grelhado", "Pizza Margherita"]
 bebidas_options = ["Água Mineral", "Refrigerante", "Suco Natural"]
 
-prato_principal_var = tk.StringVar(root)
+prato_principal_var = tk.StringVar(master)
 prato_principal_var.set(pratos_principais_options[0])
 
-bebida_var = tk.StringVar(root)
+bebida_var = tk.StringVar(master)
 bebida_var.set(bebidas_options[0])
 
-prato_principal_dropdown = tk.OptionMenu(root, prato_principal_var, *pratos_principais_options)
-prato_principal_dropdown.pack()
+prato_principal_label = tk.Label(master, text="Pratos Principal:")
+prato_principal_label.grid(row=4, column=0)
 
-bebida_dropdown = tk.OptionMenu(root, bebida_var, *bebidas_options)
-bebida_dropdown.pack()
+prato_principal_combobox = ttk.Combobox(master, textvariable=prato_principal_var, values=pratos_principais_options)
+prato_principal_combobox.grid(row=4, column=1)
 
-criar_button = tk.Button(root, width = 17, height = 1, text="Criar Registro", command=criar_registro, background="white")
-criar_button.pack()
+bebida_label = tk.Label(master, text="Bebidas:")
+bebida_label.grid(row=5, column=0)
 
-ler_button = tk.Button(root, width = 17, height = 1, text="Ler Registros", command=ler_registros, background="white")
-ler_button.pack()
+bebida_combobox = ttk.Combobox(master, textvariable=bebida_var, values=bebidas_options)
+bebida_combobox.grid(row=5, column=1, pady=10)
 
-atualizar_button = tk.Button(root, width = 17, height = 1, text="Atualizar Registro", command=atualizar_registro, background="white")
-atualizar_button.pack()
+valor_label = tk.Label(master, text="Outro valor?")
+valor_label.grid(row=6, column=0, pady=2)
 
-excluir_button = tk.Button(root, width = 17, height = 1, text="Excluir Registro", command=excluir_registro, background="white")
-excluir_button.pack()
+valor_entry = tk.Entry(master)
+valor_entry.grid(row=6, column=1, pady=2)
 
-adicionar_valor_button = tk.Button(root, width=17, height=1, text="Adicionar Valor", command=adicionar_valor, background="white")
-adicionar_valor_button.pack()
+criar_button = tk.Button(master, width=17, height=1, text="Criar Registro", command=criar_registro, background="white")
+criar_button.grid(row=7, column=0)
 
-sair_button = tk.Button(root, width = 17, height = 1, text="Sair", command=sair, background="white")
-sair_button.pack()
+adicionar_valor_button = tk.Button(master, width=17, height=1, text="Adicionar Valor", command=adicionar_valor, background="white")
+adicionar_valor_button.grid(row=7, column=1)
 
-result_label = tk.Label(root, text="")
-result_label.pack()
+ler_button = tk.Button(master, width=17, height=1, text="Fechar conta", command=ler_registros, background="white")
+ler_button.grid(row=9, column=0, padx=(0, 5))  # Adiciona um espaço à direita do botão "Fechar conta"
 
-root.mainloop()
+# Botão "Excluir Registro"
+excluir_button = tk.Button(master, width=17, height=1, text="Excluir Registro", command=excluir_registro, background="white")
+excluir_button.grid(row=9, column=1)
+
+# Botão "Sair"
+sair_button = tk.Button(master, width=17, height=1, text="Sair", command=sair, background="white")
+sair_button.grid(row=10, column=0, columnspan=2, pady=10)
+
+# Result Label
+result_label = tk.Label(master, text="")
+result_label.grid(row=11, column=0, columnspan=2)
+
+master.mainloop()
