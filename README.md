@@ -37,6 +37,7 @@ Pagamento Descomplicado:
  Ofereça opções de pagamento flexíveis, seja por cliente ou por mesa, integrando-se a sistemas de pagamento eletrônico para uma experiência de encerramento de conta simplificada.
 
 
+## Integrantes
 
 GRUPO 04 - SISTEMA DE CONTROLE DE CONSUMO DE RESTAURANTE
  
