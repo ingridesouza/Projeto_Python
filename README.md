@@ -1,4 +1,6 @@
-# Sobre o Projeto
+# Comanda Online
+
+## Sobre o Projeto
 
 O Comanda Online é um sistema inovador desenvolvido com Python e o Tkinter, para otimizar a gestão de pedidos em restaurantes, proporcionando uma experiência personalizada para cada mesa e cliente. Com funcionalidades intuitivas e diferenciadas, nosso sistema busca tornar a interação entre clientes e equipe de atendimento mais eficiente e agradável.
 
