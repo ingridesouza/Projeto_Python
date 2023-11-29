@@ -148,10 +148,10 @@ def sair():
     #para fechar a janela
 
 master = tk.Tk()
-master.title("Sistema de Controle de Consumo de Restaurante")
+master.title("Comanda Online")
 master.geometry("400x480")
 
-titulo_label = tk.Label(master, text="Sistema de Controle de Consumo", font=("Helvetica", 16, "bold"), background='#E0E0E0')
+titulo_label = tk.Label(master, text="Comanda Online", font=("Helvetica", 16, "bold"), background='#E0E0E0')
 titulo_label.grid(row=0, column=0, columnspan=2, pady=10)
 
 mesa_label = tk.Label(master, text="Número da mesa (1-6):")
