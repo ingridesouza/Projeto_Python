@@ -4,7 +4,7 @@ O Comanda Online é um sistema inovador desenvolvido com Python e o Tkinter, par
 
  ![interface](./assets/images/sistemaComandas.webp)
 
-### Principais Características
+## Principais Características
 
 Organização por Mesas:
  Cada mesa é identificada de maneira única, permitindo um gerenciamento preciso dos pedidos e consumos.
@@ -22,7 +22,7 @@ Integração com Pagamento:
  Ofereça a opção de pagamento individualizado ou por mesa, integrando-se a sistemas de pagamento eletrônico para uma experiência de checkout mais rápida e conveniente.
 
 
- ### Como Funciona
+ ## Como Funciona
 
 Cadastro de Mesas:
  Insira as mesas do seu estabelecimento no sistema, atribuindo identificadores únicos.
